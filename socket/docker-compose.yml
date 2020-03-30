@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  php:
+    build:
+      dockerfile: ./build/docker/php/Dockerfile
+      context: .
+
+    # links:
+    #   - mysql_database
+    volumes:
+      - ./:/var/www/
+#    networks:
+#      - backend
+    stdin_open: true
+    init: true
+    command: php -q ./src/index.php
+    ports:
+      - 12345:12345
+    environment:
+      XDEBUG_CONFIG: "${DOCKER_XDEBUG:-}"
+      PHP_IDE_CONFIG: "${DOCKER_PHP_IDE_CONFIG:-serverName=PHP-Docker}"
+    networks:
+      - frontend
+
+networks:
+  frontend:

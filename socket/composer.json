@@ -1,0 +1,23 @@
+{
+    "name": "nmaier95/console-chat-server",
+    "description": "Server setup for console-chat-client (hosts websocket)",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Niklas Maier",
+            "email": "maier-niklas@t-online.de"
+        }
+    ],
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Chat\\": "src/"
+        }
+    },
+
+    "require": {}
+}
