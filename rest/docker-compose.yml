@@ -1,0 +1,70 @@
+version: '3.7'
+
+services:
+  mysql_database:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql_database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    networks:
+      - backend
+    volumes:
+      - mysql_database_data:/var/lib/mysql
+
+
+  phpmyadmin:
+    depends_on:
+      - mysql_database
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql_database
+      PMA_PORT: 3306
+    ports:
+      - 1337:80
+    networks:
+      - backend
+
+
+  php:
+    build:
+      dockerfile: ./build/docker/php/Dockerfile
+      context: .
+    volumes:
+      - ./src/:/var/www/html/
+    networks:
+      - backend
+    environment:
+      XDEBUG_CONFIG: "${DOCKER_XDEBUG:-}"
+      PHP_IDE_CONFIG: "${DOCKER_PHP_IDE_CONFIG:-serverName=PHP-Docker}"
+    stdin_open: true
+
+
+  apache:
+    build: build/docker/apache
+    depends_on:
+      - mysql_database
+    # links:
+    #   - php
+    networks:
+      - frontend
+      - backend
+    # craft3 only works with port 80 (at least out of the box)
+    ports:
+      - 80:80
+    volumes:
+      - ./src/:/var/www/html/
+
+networks:
+  backend:
+  frontend:
+
+
+volumes:
+  mysql_database_data: 

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -n "$XDEBUG_CONFIG" ]; then
+    docker-php-ext-enable xdebug
+#    echo "$XDEBUG_CONFIG" >> /usr/local/etc/php/conf.d/zz_xdebug.ini
+fi
+
+# first arg is `-f` or `--some-option`
+#if [ "${1#-}" != "$1" ]; then
+#    set -- php "$@"
+#fi
+
+#echo "$@";
+exec "$@"

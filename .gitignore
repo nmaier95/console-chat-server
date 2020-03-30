@@ -1,3 +1,8 @@
+# Lumen ignores:
+Homestead.json
+Homestead.yaml
+.env
+.phpunit.result.cache
 
 # Created by https://www.gitignore.io/api/macos,composer,phpstorm,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=macos,composer,phpstorm,visualstudiocode
