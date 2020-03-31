@@ -2,9 +2,10 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/rest/src/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/socket/vendor/composer" />
     </content>
+    <content url="file://$MODULE_DIR$/rest/src/vendor/illuminate" />
+    <content url="file://$MODULE_DIR$/rest/src/vendor/laravel" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
