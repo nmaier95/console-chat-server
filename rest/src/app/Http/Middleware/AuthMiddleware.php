@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class ExampleMiddleware
+class AuthMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,6 +15,10 @@ class ExampleMiddleware
      */
     public function handle($request, Closure $next)
     {
+        if($request->bearerToken() !== 'asd') {
+            return response()->json('No or invalid token provided', 401);
+        }
+
         return $next($request);
     }
 }

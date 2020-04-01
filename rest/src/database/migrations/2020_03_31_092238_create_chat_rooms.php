@@ -17,7 +17,7 @@ class CreateChatRooms extends Migration
     {
         $this->down();
         Schema::create($this::$tableName, function (Blueprint $table) {
-            $table->bigIncrements('id')
+            $table->id()
                 ->autoIncrement()
                 ->unique();
             $table->timestamps();

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PhpIncludePathManager">
     <include_path>
-      <path value="$PROJECT_DIR$/socket/vendor/composer" />
+      <path value="$PROJECT_DIR$" />
     </include_path>
   </component>
   <component name="PhpProjectServersManager">

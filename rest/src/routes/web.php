@@ -16,3 +16,15 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+
+$router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
+
+    $router->group(['prefix' => 'chat'], function () use ($router) {
+
+        $router->get('receive',  'ChatController@receive');
+        $router->post('send', 'ChatController@send');
+
+    });
+
+});
