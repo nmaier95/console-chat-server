@@ -15,7 +15,7 @@ class AuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if($request->bearerToken() !== 'asd') {
+        if($request->bearerToken() !== $_ENV['API_TOKEN']) {
             return response()->json('No or invalid token provided', 401);
         }
 
