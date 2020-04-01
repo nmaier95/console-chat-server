@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateChatRooms extends Migration
 {
+    public static string $tableName = 'chat_rooms';
+
     /**
      * Run the migrations.
      *
@@ -13,8 +15,11 @@ class CreateChatRooms extends Migration
      */
     public function up()
     {
-        Schema::create('chatrooms', function (Blueprint $table) {
-            $table->increments('id');
+        $this->down();
+        Schema::create($this::$tableName, function (Blueprint $table) {
+            $table->bigIncrements('id')
+                ->autoIncrement()
+                ->unique();
             $table->timestamps();
         });
     }
@@ -26,6 +31,6 @@ class CreateChatRooms extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chatrooms');
+        Schema::dropIfExists($this::$tableName);
     }
 }

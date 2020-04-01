@@ -43,7 +43,7 @@ services:
       - backend
     environment:
       XDEBUG_CONFIG: "${DOCKER_XDEBUG:-}"
-      PHP_IDE_CONFIG: "${DOCKER_PHP_IDE_CONFIG:-serverName=PHP-Docker}"
+      PHP_IDE_CONFIG: "${DOCKER_PHP_IDE_CONFIG:-serverName=PHP-Docker-REST}"
     stdin_open: true
 
 

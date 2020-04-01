@@ -2,7 +2,7 @@
 
 if [ -n "$XDEBUG_CONFIG" ]; then
     docker-php-ext-enable xdebug
-    echo "IIIFFF ---------"
+#    echo "IIIFFF ---------"
 #    echo "$XDEBUG_CONFIG" >> /usr/local/etc/php/conf.d/zz_xdebug.ini
 fi
 

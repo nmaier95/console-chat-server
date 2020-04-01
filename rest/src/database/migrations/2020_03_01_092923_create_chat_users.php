@@ -4,9 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChatTable extends Migration
+class CreateChatUsers extends Migration
 {
-    public static string $tableName = 'chat';
+    public static string $tableName = 'chat_users';
 
     /**
      * Run the migrations.
@@ -17,15 +17,8 @@ class CreateChatTable extends Migration
     {
         $this->down();
         Schema::create($this::$tableName, function (Blueprint $table) {
-            $table->string('message');
-
-            $table->foreignId('user_id')
-                ->constrained(CreateChatUsers::$tableName);
-
-            $table->foreignId('chat_room_id')
-                ->constrained(CreateChatRooms::$tableName)
-                ->onDelete('cascade');
-
+            $table->id()->autoIncrement()->unique();
+            $table->string('username')->unique();
             $table->timestamps();
         });
     }
