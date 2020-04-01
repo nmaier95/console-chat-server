@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChatRoom extends Model
 {
+    protected $table = 'chat_rooms';
+
     /**
      * The attributes that are mass assignable.
      *
