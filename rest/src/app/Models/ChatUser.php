@@ -15,6 +15,7 @@ class ChatUser extends Model
      */
     protected $fillable = [
         'username',
+        'password'
     ];
 
     /**
@@ -23,4 +24,14 @@ class ChatUser extends Model
      * @var array
      */
     protected $hidden = [];
+
+    public function getId()
+    {
+        return $this->getAttribute('id');
+    }
+
+    public function getUsername()
+    {
+        return $this->getAttribute('username');
+    }
 }

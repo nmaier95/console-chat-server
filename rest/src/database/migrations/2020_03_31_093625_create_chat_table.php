@@ -15,7 +15,6 @@ class CreateChatTable extends Migration
      */
     public function up()
     {
-        $this->down();
         Schema::create($this::$tableName, function (Blueprint $table) {
             $table->string('message');
 

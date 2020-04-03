@@ -18,13 +18,19 @@ $router->get('/', function () use ($router) {
 });
 
 
-$router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
+$router->group(['prefix' => 'api'], function () use ($router) {
 
-    $router->group(['prefix' => 'chat'], function () use ($router) {
+    $router->group(['prefix' => 'chat', 'middleware' => 'auth'], function () use ($router) {
 
         $router->get('receive',  'ChatController@receive');
         $router->post('send', 'ChatController@send');
 
+    });
+
+
+    $router->group(['prefix' => 'user'], function () use ($router) {
+        $router->post('create', 'UserController@create');
+        $router->post('login', 'UserController@login');
     });
 
 });

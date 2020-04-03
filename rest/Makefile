@@ -17,5 +17,5 @@ db_migration_for:
 	docker-compose exec php php artisan make:migration $(ARGUMENTS)
 
 
-db_migrate_empty:
-	docker-compose exec php php artisan migrate
+db_migrate_fresh:
+	docker-compose exec php php artisan migrate:fresh

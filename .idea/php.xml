@@ -3,16 +3,8 @@
   <component name="PhpIncludePathManager">
     <include_path>
       <path value="$PROJECT_DIR$" />
+      <path value="$PROJECT_DIR$/socket/vendor/composer" />
     </include_path>
-  </component>
-  <component name="PhpProjectServersManager">
-    <servers>
-      <server host="localhost" id="895736cf-571b-4080-b756-ee1b75319959" name="PHP-Docker-REST" port="9001" use_path_mappings="true">
-        <path_mappings>
-          <mapping local-root="$PROJECT_DIR$/rest/src" remote-root="/var/www/html" />
-        </path_mappings>
-      </server>
-    </servers>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
 </project>

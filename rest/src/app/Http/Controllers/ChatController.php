@@ -14,7 +14,6 @@ class ChatController extends Controller
     public function send(Request $request): JsonResponse {
         $rules = [
             'message' => 'required|string',
-            'user_id' => 'required|integer',
             'chat_room_id' => 'nullable|integer',
         ];
 
@@ -35,17 +34,16 @@ class ChatController extends Controller
 
         Chat::create([
             'chat_room_id' => $chatRoomId,
-            'user_id' => $request->post('user_id'),
+            'user_id' => $request->get('jwtPayload')->sub,
             'message' => $request->post('message'),
         ]);
 
-        return response()->json(['success' => true], 201);
+        return response()->json(['success' => true, 'chat_room_id' => $chatRoomId], 201);
     }
 
     public function receive(Request $request): JsonResponse {
         $rules = [
             'chat_room_id' => 'required|integer',
-            'user_id' => 'required|integer',
         ];
 
         try
@@ -59,7 +57,7 @@ class ChatController extends Controller
 
         return response()->json(Chat::where([
             'chat_room_id' => $request->get('chat_room_id'),
-            'user_id' => $request->get('user_id')
+            'user_id' => $request->get('jwtPayload')->sub
         ])->get(), 201);
     }
 }
