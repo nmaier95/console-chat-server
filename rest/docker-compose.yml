@@ -51,12 +51,9 @@ services:
     build: build/docker/apache
     depends_on:
       - mysql_database
-    # links:
-    #   - php
     networks:
       - frontend
       - backend
-    # craft3 only works with port 80 (at least out of the box)
     ports:
       - 80:80
     volumes:
