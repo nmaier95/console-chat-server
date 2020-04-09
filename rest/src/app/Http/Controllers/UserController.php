@@ -32,7 +32,7 @@ class UserController extends Controller
         try
         {
             ChatUser::create([
-                'username' => $request->get('username'),
+                'username' => $request->post('username'),
                 'password' => Crypt::encryptString($request->post('password'))
             ]);
         }
