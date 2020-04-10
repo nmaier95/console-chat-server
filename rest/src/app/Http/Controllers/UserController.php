@@ -13,38 +13,29 @@ use Firebase\JWT\JWT;
 
 class UserController extends Controller
 {
+    /**
+     * @var array
+     */
     private $credentialRules = [
         'username' => 'required|string',
         'password' => 'required|string',
     ];
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function create(Request $request): JsonResponse
     {
         try
         {
             $this->validate($request, $this->credentialRules);
-        }
-        catch (ValidationException $e)
-        {
-            return response()->json($e->errors());
-        }
 
-        try
-        {
-            ChatUser::create([
+            /** @var ChatUser $user */
+            $user = ChatUser::create([
                 'username' => $request->post('username'),
                 'password' => Crypt::encryptString($request->post('password'))
             ]);
-        }
-        catch (\Exception $e)
-        {
-            return response()->json(['error' => 'USERNAME_NOT_AVAILABLE']);
-        }
-
-        try
-        {
-            /** @var ChatUser $user */
-            $user = ChatUser::firstWhere('username', '=', $request->post('username'));
 
             $jwtPayload = [
                 'iss' => 'chat-user-jwt', // Issuer of the token
@@ -55,25 +46,26 @@ class UserController extends Controller
 
             return response()->json(['success' => true, 'token' => JWT::encode($jwtPayload, env('JWT_PRIVATE_KEY'))]);
         }
-        catch (ModelNotFoundException $e)
-        {
-            return response()->json('something went wrong trying to find new user in DB');
-        }
-    }
-
-    public function login(Request $request)
-    {
-        try
-        {
-            $this->validate($request, $this->credentialRules);
-        }
         catch (ValidationException $e)
         {
             return response()->json($e->errors());
         }
+        catch (\Exception $e)
+        {
+            return response()->json(['error' => 'USERNAME_NOT_AVAILABLE']);
+        }
+    }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function login(Request $request): JsonResponse
+    {
         try
         {
+            $this->validate($request, $this->credentialRules);
+
             /** @var ChatUser $user */
             $user = ChatUser::firstWhere('username', '=', $request->post('username'));
 
@@ -89,14 +81,15 @@ class UserController extends Controller
 
                 return response()->json(['success' => true, 'token' => JWT::encode($jwtPayload, env('JWT_PRIVATE_KEY'))]);
             }
-            else
-            {
-                throw new \Exception();
-            }
+            throw new \Exception();
+        }
+        catch (ValidationException $e)
+        {
+            return response()->json($e->errors());
         }
         catch (\Exception $e)
         {
-            return response()->json(['error' => 'WRONG_USERNAME_PASSWORD']);
+            return response()->json(['error' => 'INVALID_USERNAME_PASSWORD']);
         }
     }
 }
