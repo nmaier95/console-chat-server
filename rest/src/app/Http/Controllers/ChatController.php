@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Models\ChatRoom;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use phpDocumentor\Reflection\Types\Integer;
 
 class ChatController extends Controller
 {
 
-    public function send(Request $request): JsonResponse {
+    public function send(Request $request): JsonResponse
+    {
         $rules = [
             'message' => 'required|string',
             'chat_room_id' => 'nullable|integer',
@@ -27,7 +33,8 @@ class ChatController extends Controller
         }
 
         $chatRoomId = $request->post('chat_room_id');
-        if(!$chatRoomId) {
+        if (!$chatRoomId)
+        {
             $chatRoom = ChatRoom::create();
             $chatRoomId = $chatRoom->getAttribute('id');
         }
@@ -41,23 +48,31 @@ class ChatController extends Controller
         return response()->json(['success' => true, 'chat_room_id' => $chatRoomId], 201);
     }
 
-    public function receive(Request $request): JsonResponse {
-        $rules = [
-            'chat_room_id' => 'required|integer',
-        ];
-
+    public function receive(Request $request, int $chat_room_id, int $timestamp = null): JsonResponse
+    {
         try
         {
-            $this->validate($request, $rules);
+            /** @var Builder $chatQuery */
+            $chatQuery = Chat::where([
+                'chat_room_id' => $chat_room_id,
+                'user_id' => $request->get('jwtPayload')->sub
+            ]);
+
+            if ($timestamp)
+            {
+                $date = new \DateTime();
+                $date->setTimestamp($timestamp);
+                $chatQuery = $chatQuery->whereDate('created_at', '>', $timestamp);
+            }
+
+            $messages = $chatQuery->with('user')->get();
         }
-        catch (ValidationException $e)
+        catch (ModelNotFoundException $e)
         {
-            return response()->json($e->errors());
+            return response()->json(['error' => 'USER_OR_CHATROOM_NOT_FOUND']);
         }
 
-        return response()->json(Chat::where([
-            'chat_room_id' => $request->get('chat_room_id'),
-            'user_id' => $request->get('jwtPayload')->sub
-        ])->get(), 201);
+        $now = new \DateTime(); $now->setTimestamp(time()); $now->format('Y-m-d');
+        return response()->json(['success' => true, 'messages' => $messages, 'timestamp' => $now->getTimestamp()], 201);
     }
 }

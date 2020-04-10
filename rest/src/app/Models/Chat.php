@@ -3,8 +3,8 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Chat extends Model
 {
@@ -26,5 +26,13 @@ class Chat extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = ['user_id', 'updated_at'];
+
+    /**
+     *
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\ChatUser');//, 'user_id', 'id', 'user');//, 'chat_user');
+    }
 }

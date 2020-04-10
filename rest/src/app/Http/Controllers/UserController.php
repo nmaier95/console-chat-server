@@ -89,10 +89,7 @@ class UserController extends Controller
 
                 return response()->json(['success' => true, 'token' => JWT::encode($jwtPayload, env('JWT_PRIVATE_KEY'))]);
             }
-            else
-            {
-                throw new \Exception();
-            }
+            throw new \Exception();
         }
         catch (\Exception $e)
         {

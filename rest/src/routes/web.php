@@ -22,7 +22,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
     $router->group(['prefix' => 'chat', 'middleware' => 'auth'], function () use ($router) {
 
-        $router->get('receive',  'ChatController@receive');
+        $router->get('receive/{chat_room_id}[/{timestamp}]',  'ChatController@receive');
         $router->post('send', 'ChatController@send');
 
     });
