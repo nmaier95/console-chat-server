@@ -34,3 +34,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
 });
+
+$router->get('/{any:.*}', function() use ($router) {
+    return response()->json(['error' => true, 'message' => 'route not found or method not allowed'], 404);
+});

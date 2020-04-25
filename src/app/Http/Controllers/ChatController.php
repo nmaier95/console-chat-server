@@ -83,8 +83,6 @@ class ChatController extends Controller
             return response()->json(['error' => 'USER_OR_CHATROOM_NOT_FOUND']);
         }
 
-        $now = new \DateTime(); $now->setTimestamp(time()); $now->format('Y-m-d');
-
-        return response()->json(['success' => true, 'messages' => $messages, 'timestamp' => Date::now()->getTimestamp()], 201);
+        return response()->json(['success' => true, 'messages' => $messages, 'timestamp' => Date::now()->getTimestamp()], 200);
     }
 }
