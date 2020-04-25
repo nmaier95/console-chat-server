@@ -1,0 +1,51 @@
+on: push
+name: Publish
+jobs:
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: Cache PHP dependencies
+        uses: actions/cache@v1
+        with:
+          path: src/vendor
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
+
+      - name: Install composer dependencies
+        run: |
+          cd ./src
+          composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Create prod .env file
+        run: |
+          touch ./src/.env
+          cat ./src/.env.example >> ./src/.env
+          echo APP_URL=https://ccs.maier-niklas.de >> ./src/.env
+          echo APP_DEBUG=false >> ./src/.env
+          echo APP_KEY=${{ secrets.ENV_APP_KEY }} >> ./src/.env
+          echo DB_CONNECTION=${{ secrets.ENV_DB_CONNECTION }} >> ./src/.env
+          echo DB_HOST=${{ secrets.ENV_DB_HOST }} >> ./src/.env
+          echo DB_PORT=${{ secrets.ENV_DB_PORT }} >> ./src/.env
+          echo DB_DATABASE=${{ secrets.ENV_DB_DATABASE }} >> ./src/.env
+          echo DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} >> ./src/.env
+          echo DB_PASSWORD=${{ secrets.ENV_DB_PASSWORD }} >> ./src/.env
+          echo JWT_PRIVATE_KEY=${{ secrets.ENV_JWT_PRIVATE_KEY }} >> ./src/.env
+          echo ALLOWED_CORS_DOMAIN=${{ secrets.ENV_ALLOWED_CORS_DOMAIN }} >> ./src/.env
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.1.1
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SOURCE: ./
+          ARGS: --delete
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
