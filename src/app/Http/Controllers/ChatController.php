@@ -82,6 +82,6 @@ class ChatController extends Controller
             return response()->json(['error' => 'USER_OR_CHATROOM_NOT_FOUND']);
         }
 
-        return response()->json(['success' => true, 'messages' => $messages, 'timestamp' => Date::now()->getTimestamp()], 200);
+        return response()->json(['success' => true, 'messages' => $messages, 'timestamp' => count($messages) > 0 ? Date::now()->getTimestamp() : null], 200);
     }
 }
