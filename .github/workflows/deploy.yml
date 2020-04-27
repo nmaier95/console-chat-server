@@ -24,9 +24,28 @@ jobs:
           cd ./src
           composer install --prefer-dist --no-progress --no-suggest
 
-      - name: FTP-Deploy-Action
-        uses: SamKirkland/FTP-Deploy-Action@3.0.0
-        with:
-          ftp-server: ${{ secrets.FTP_URL }}html/console-chat-server
-          ftp-username: ${{ secrets.FTP_USERNAME }}
-          ftp-password: ${{ secrets.FTP_PASSWORD }}
+      - name: Create prod .env file
+        run: |
+          touch ./src/.env
+          cat ./src/.env.example >> ./src/.env
+          echo APP_URL=https://ccs.maier-niklas.de >> ./src/.env
+          echo APP_DEBUG=false >> ./src/.env
+          echo APP_KEY=${{ secrets.ENV_APP_KEY }} >> ./src/.env
+          echo DB_CONNECTION=${{ secrets.ENV_DB_CONNECTION }} >> ./src/.env
+          echo DB_HOST=${{ secrets.ENV_DB_HOST }} >> ./src/.env
+          echo DB_PORT=${{ secrets.ENV_DB_PORT }} >> ./src/.env
+          echo DB_DATABASE=${{ secrets.ENV_DB_DATABASE }} >> ./src/.env
+          echo DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} >> ./src/.env
+          echo DB_PASSWORD=${{ secrets.ENV_DB_PASSWORD }} >> ./src/.env
+          echo JWT_PRIVATE_KEY=${{ secrets.ENV_JWT_PRIVATE_KEY }} >> ./src/.env
+          echo ALLOWED_CORS_DOMAIN=${{ secrets.ENV_ALLOWED_CORS_DOMAIN }} >> ./src/.env
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.1.1
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SOURCE: ./
+          ARGS: --delete
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
