@@ -68,8 +68,7 @@ class ChatController extends Controller
             /** @var Builder $chatQuery */
             $chatQuery = Chat::where([
                 'chat_room_id' => $chat_room_id,
-                'user_id' => $request->get('jwtPayload')->sub
-            ]);
+            ])->where('user_id', '!=', $request->get('jwtPayload')->sub);
 
             if ($timestamp)
             {
